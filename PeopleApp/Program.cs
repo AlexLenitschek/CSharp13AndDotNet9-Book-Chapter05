@@ -343,7 +343,7 @@ foreach (Passenger passenger in passengers)
     };
     WriteLine($"Flight costs {flightCost:C} for {passenger}");
 }
-
+WriteLine();
 #endregion
 
 #region Init-only properties
@@ -356,4 +356,88 @@ ImmutablePerson jeff = new()
 // Error CS8852: Init-only property or indexer 'ImmutablePerson.FirstName'
 // can only be assigned in an object initializer, or on 'this' or 'base' in
 // an instance constructor or an 'init' accessor.
+#endregion
+
+#region Record Types
+ImmutableVehicle car = new()
+{
+    Brand = "Mazda MX-5 RF",
+    Color = "Soul Red Crystal metallic",
+    Wheels = 4
+};
+
+ImmutableVehicle repaintedCar = car with { Color = "Polymetal Grey" };
+
+WriteLine($"Original car color was {car.Color}");
+WriteLine($"Repainted car color is {repaintedCar.Color}");
+
+WriteLine();
+#endregion
+
+#region Equality of Record types
+AnimalClass ac1 = new() { Name = "Rex"};
+AnimalClass ac2 = new() { Name = "Rex" };
+
+WriteLine($"ac1 == ac2: {ac1 == ac2}"); // False, because class is used even though the property values equal.
+// Class instances are only equal if they are literally the same object. True when their memory addresses are equal.
+AnimalRecord ar1 = new() { Name = "Rex" };
+AnimalRecord ar2 = new() { Name = "Rex" };
+
+WriteLine($"ar1 == ar2: {ar1 == ar2}"); // True, because record is used this time.
+
+WriteLine();
+#endregion
+
+#region Equality of other types.
+int number1 = 3;
+int number2 = 3;
+WriteLine($"number1: {number1}, number2: {number2}");
+WriteLine($"number1 == number2: {number1 == number2}");
+WriteLine();
+// Because equality of two reference type variables is tested by .NET.
+// The memory addresses of these are equal.
+
+Person p1 = new() { Name = "Kevin" };
+Person p2 = new() { Name = "Kevin" };
+WriteLine($"p1: {p1}, p2: {p2}");
+WriteLine($"p1.Name: {p1.Name}, p2.Name: {p2.Name}");
+WriteLine($"p1 == p2: {p1 == p2}");
+WriteLine();
+// This is because they are not the same object. If both variables would point at the same object in the heap,
+// then they would be equal.
+
+Person p3 = p1;
+WriteLine($"p1: {p1}, p3: {p3}");
+WriteLine($"p3.Name: {p3.Name}");
+WriteLine($"p1 == p3: {p1 == p3}");
+WriteLine();
+// This is because p3 is a reference type of p1 and therefore equal.
+
+// String is the only class reference type implemented to act like a value type for equality.
+WriteLine($"p1.Name: {p1.Name}, p2.Name: {p2.Name}");
+WriteLine($"p1.Name == p2.Name: {p1.Name == p2.Name}");
+WriteLine();
+#endregion
+
+#region Positional data members in records.
+ImmutableAnimal oscar = new("Oscar", "Labrador");
+var (who, what) = oscar; // Calls the Deconstruct method.
+WriteLine($"{who} is a {what}");
+WriteLine();
+#endregion
+
+#region Defining a primary constructor for a class.
+Headset vp = new("Apple", "Vision Pro");
+WriteLine($"The {vp.ProductName} is made by {vp.Manufacturer}");
+Headset holo = new();
+WriteLine($"{holo.ProductName} is made by {holo.Manufacturer}");
+Headset mq = new() { Manufacturer = "Meta", ProductName = "Quest 3" };
+WriteLine($"{mq.ProductName} is made by {mq.Manufacturer}");
+WriteLine();
+#endregion
+
+
+#region Exercise 5.2 - Practice access modifiers.
+Car fiat = new() { Wheels = 4, IsEV = true};
+fiat.Start();
 #endregion
